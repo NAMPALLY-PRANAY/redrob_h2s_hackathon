@@ -666,6 +666,7 @@ with gr.Blocks(title="AI Candidate Ranking Platform") as demo:
             if logo_path.exists():
                 gr.Image(value=str(logo_path), show_label=False, container=False, elem_classes="logo-container")
             
+            gr.Markdown("## 🏆 Candidate Engine")
             gr.Markdown("Adjust weights to customize scores:")
             
             with gr.Group():
