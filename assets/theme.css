@@ -33,21 +33,42 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--text-primary) !important;
 }
 
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+@media (min-width: 768px) {
+    html, body {
+        height: 100vh !important;
+        overflow: hidden !important;
+    }
+    #sidebar, #main-workspace {
+        height: 100vh !important;
+        overflow-y: auto !important;
+    }
+}
+
+@media (max-width: 767px) {
+    #sidebar, #main-workspace {
+        height: auto !important;
+        overflow-y: visible !important;
+    }
+}
+
 /* Sidebar Styling */
 #sidebar {
     background-color: var(--surface-sidebar) !important;
     border-right: 1px solid var(--border-color) !important;
     padding: 1.5rem !important;
-    height: 100vh !important;
-    overflow-y: auto !important;
+    box-sizing: border-box !important;
 }
 
 /* Main workspace area styling */
 #main-workspace {
     padding: 2rem !important;
     background-color: var(--bg-dark) !important;
-    height: 100vh !important;
-    overflow-y: auto !important;
+    box-sizing: border-box !important;
 }
 
 /* Premium Cards */

@@ -666,7 +666,6 @@ with gr.Blocks(title="AI Candidate Ranking Platform") as demo:
             if logo_path.exists():
                 gr.Image(value=str(logo_path), show_label=False, container=False, elem_classes="logo-container")
             
-            gr.Markdown("## 🏆 Candidate Engine")
             gr.Markdown("Adjust weights to customize scores:")
             
             with gr.Group():
@@ -795,7 +794,8 @@ with gr.Blocks(title="AI Candidate Ranking Platform") as demo:
             file_input.change(
                 fn=process_candidate_dataset,
                 inputs=[file_input, exp_slider, title_slider, loc_slider, bio_slider, skill_slider, text_slider, career_slider, cons_slider],
-                outputs=[landing_area, loading_area, dashboard_workspace, status_badge, chart_score_dist, chart_scatter_fit, chart_skills_counter, table_grid, inspector_dropdown, inspector_details, stats_cards]
+                outputs=[landing_area, loading_area, dashboard_workspace, status_badge, chart_score_dist, chart_scatter_fit, chart_skills_counter, table_grid, inspector_dropdown, inspector_details, stats_cards],
+                show_progress="hidden"
             )
             
             if example_file.exists():
@@ -903,7 +903,8 @@ with gr.Blocks(title="AI Candidate Ranking Platform") as demo:
                 s_item.change(
                     fn=trigger_weights_recalculation,
                     inputs=sliders_list,
-                    outputs=[chart_score_dist, chart_scatter_fit, chart_skills_counter, table_grid, inspector_dropdown, inspector_details, stats_cards, download_btn]
+                    outputs=[chart_score_dist, chart_scatter_fit, chart_skills_counter, table_grid, inspector_dropdown, inspector_details, stats_cards, download_btn],
+                    show_progress="hidden"
                 )
                 
             # Chatbot queries

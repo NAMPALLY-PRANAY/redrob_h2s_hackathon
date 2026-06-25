@@ -319,6 +319,72 @@ def work_fit(sig: Dict) -> float:
     if isinstance(ipr, (int, float)):
         s += (ipr - 0.6) * 0.55
 
+    # Signal 2: signup_date
+    sud = parse_date(sig.get("signup_date", ""))
+    if sud:
+        s += 0.05
+
+    # Signal 5: profile_views_received_30d
+    pvr = sig.get("profile_views_received_30d")
+    if isinstance(pvr, (int, float)) and pvr >= 0:
+        s += min(pvr, 50) * 0.01
+
+    # Signal 6: applications_submitted_30d
+    app_sub = sig.get("applications_submitted_30d")
+    if isinstance(app_sub, (int, float)) and app_sub >= 0:
+        s += min(app_sub, 10) * 0.02
+
+    # Signal 8: avg_response_time_hours
+    art = sig.get("avg_response_time_hours")
+    if isinstance(art, (int, float)) and art >= 0:
+        if art <= 2:
+            s += 0.15
+        elif art <= 24:
+            s += 0.08
+        elif art > 72:
+            s -= 0.1
+
+    # Signal 9: skill_assessment_scores
+    assessments = sig.get("skill_assessment_scores", {})
+    if isinstance(assessments, dict):
+        for skill_name, val in assessments.items():
+            norm_name = norm(skill_name)
+            if norm_name in ("python", "embeddings", "retrieval", "ranking", "faiss", "milvus", "qdrant", "weaviate", "pinecone"):
+                s += (val / 100.0) * 0.3
+
+    # Signal 10: connection_count
+    cc = sig.get("connection_count")
+    if isinstance(cc, (int, float)) and cc >= 0:
+        s += min(cc, 500) / 500 * 0.15
+
+    # Signal 11: endorsements_received
+    er = sig.get("endorsements_received")
+    if isinstance(er, (int, float)) and er >= 0:
+        s += min(er, 50) / 50 * 0.2
+
+    # Signal 13: expected_salary_range_inr_lpa
+    sal = sig.get("expected_salary_range_inr_lpa", {})
+    if isinstance(sal, dict):
+        sal_min = sal.get("min", 0)
+        sal_max = sal.get("max", 0)
+        if sal_min > 0 or sal_max > 0:
+            s += 0.05
+
+    # Signal 17: search_appearance_30d
+    sa = sig.get("search_appearance_30d")
+    if isinstance(sa, (int, float)) and sa >= 0:
+        s += min(sa, 100) / 100 * 0.1
+
+    # Signal 18: saved_by_recruiters_30d
+    sbr = sig.get("saved_by_recruiters_30d")
+    if isinstance(sbr, (int, float)) and sbr >= 0:
+        s += min(sbr, 10) * 0.05
+
+    # Signal 20: offer_acceptance_rate
+    oar = sig.get("offer_acceptance_rate", -1)
+    if isinstance(oar, (int, float)) and oar >= 0:
+        s += oar * 0.25
+
     return s
 
 
