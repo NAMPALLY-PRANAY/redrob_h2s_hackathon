@@ -104,7 +104,7 @@ footer {visibility: hidden}
 }
 """
 
-with gr.Blocks(title="X7F9A2 — Intelligent Candidate Discovery Engine", css=custom_css, theme=gr.themes.Soft()) as demo:
+with gr.Blocks(title="X7F9A2 — Intelligent Candidate Discovery Engine") as demo:
     with gr.Row():
         with gr.Column(scale=1):
             logo_path = Path("logo.png")
@@ -172,4 +172,4 @@ with gr.Blocks(title="X7F9A2 — Intelligent Candidate Discovery Engine", css=cu
 
 if __name__ == "__main__":
     # Launch app
-    demo.launch(server_name="0.0.0.0", server_port=7860)
+    demo.launch(server_name="0.0.0.0", server_port=7860, css=custom_css, theme=gr.themes.Soft())
