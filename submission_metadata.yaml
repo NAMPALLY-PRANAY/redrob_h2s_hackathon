@@ -1,0 +1,66 @@
+# Redrob Hackathon — Submission Metadata
+#
+# Filled for Team X7F9A2 (Solo participant: PRANAY NAMPALLY)
+
+# ============================================================================
+# Team identity
+# ============================================================================
+team_name: "X7F9A2"
+
+primary_contact:
+  name: "PRANAY NAMPALLY"
+  email: "npranay2006@gmail.com"
+  phone: "+91-9440971722"
+
+team_members:
+  - name: "PRANAY NAMPALLY"
+    email: "npranay2006@gmail.com"
+    role: "ML Engineer"
+
+# ============================================================================
+# Code and reproducibility
+# ============================================================================
+github_repo: "https://github.com/NAMPALLY-PRANAY/redrob_h2s_hackathon"
+sandbox_link: "https://huggingface.co/spaces/npran24/redrob_h2s_hackathon"
+reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
+
+# ============================================================================
+# Compute environment
+# ============================================================================
+compute:
+  platform: "Windows Laptop"
+  cpu_cores: 8
+  ram_gb: 16
+  python_version: "3.13"
+  os: "Windows 11"
+  uses_gpu_for_inference: false
+  has_network_during_ranking: false
+  pre_computation_required: false
+  pre_computation_time_minutes: 0
+
+# ============================================================================
+# AI tools declaration
+# ============================================================================
+ai_tools_used:
+  - "Gemini"
+  - "Claude"
+  - "ChatGPT"
+
+ai_usage_summary: |
+  Used AI tools (Gemini, Claude, ChatGPT) for architectural design, code review, feature engineering discussion, and refactoring Python scripts. No candidate data was fed to external LLMs.
+
+# ============================================================================
+# Approach summary
+# ============================================================================
+methodology_summary: |
+  Deterministic rule-based ranking engine combining career experience alignment (peaking at 5-9 years), target technical skill match (embeddings, retrieval, ranking, vector databases), geographical proximity and relocation willingness, and key behavioral signals (completeness, activity, response rates) to output explainable reasoning and stable candidate sorting.
+
+# ============================================================================
+# Declarations
+# ============================================================================
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true
+  reproduction_tested: true

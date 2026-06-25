@@ -1,0 +1,22 @@
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project large data files (must not be uploaded)
+candidates.jsonl
+candidates.jsonl.gz
+
+# Local build artifacts
+build/
+dist/
+*.egg-info/
