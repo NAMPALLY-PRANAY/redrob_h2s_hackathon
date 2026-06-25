@@ -1,3 +1,15 @@
+---
+title: X7F9A2 Candidate Discovery
+emoji: 🚀
+colorFrom: indigo
+colorTo: purple
+sdk: gradio
+sdk_version: 6.19.0
+app_file: app.py
+pinned: false
+license: mit
+---
+
 # 🚀 X7F9A2 — Intelligent Candidate Discovery & Ranking Engine
 
 ### Redrob Data & AI Challenge 2026
@@ -114,21 +126,22 @@ sequenceDiagram
 redrob_h2s_hackathon/
 │
 ├── README.md                      # Detailed project documentation & diagrams
+├── LICENSE                        # MIT License
 ├── submission_metadata.yaml       # Challenge portal metadata verification
 ├── requirements.txt               # App and environment dependencies
 ├── rank.py                        # Core deterministic ranking pipeline script
 ├── app.py                         # Gradio sandbox application for local & HF Spaces
 ├── validate_submission.py         # Official format validation script
 ├── submission.csv                 # Generated top-100 candidates submission file
-├── logo.png                       # Team X7F9A2 logo
+├── logo.png                       # Team X7F9A2 logo (LFS tracked)
 │
-├── candidate_schema.json          # Candidate record JSON schema definition
-├── sample_candidates.json         # Official candidate evaluation sample subset
-│
-├── job_description.docx           # Senior AI Engineer job description
-├── redrob_signals_doc.docx        # Behavioral signals explanation
-├── submission_spec.docx           # Challenge rules and requirements
-└── sample_submission.csv          # Starter submission file template
+└── data/                          # Folder for raw datasets & guidelines
+    ├── candidate_schema.json      # Candidate record JSON schema definition
+    ├── sample_candidates.json     # Official candidate evaluation sample subset
+    ├── job_description.docx       # Senior AI Engineer job description
+    ├── redrob_signals_doc.docx    # Behavioral signals explanation
+    ├── submission_spec.docx       # Challenge rules and requirements
+    └── sample_submission.csv      # Starter submission file template
 ```
 
 ---
