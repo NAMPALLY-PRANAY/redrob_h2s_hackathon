@@ -179,10 +179,11 @@ python validate_submission.py submission.csv
 ### 3. Interactive Premium SaaS Sandbox
 The sandbox has been completely redesigned into a premium, commercial-grade AI Web Application resembling ChatGPT, Claude, and Perplexity. It includes:
 * **Interactive Control Sidebar**: Tune ranking weights dynamically (Experience, Role Title, Location Fit, Behavioral Signal, Exact Skill Matching, Text Relevance, Career Strength, Consistency).
+* **Expected Candidate Schema Accordion**: Persistent metadata guide positioned right in the control sidebar for ease of access.
 * **Cloud-Storage Upload Experience**: Modern drag-and-drop landing state with a progressive checklist loading indicator.
-* **Interactive Charting (Plotly)**: Visualizes score distributions, years of experience alignment, and technical skill frequencies with zoom, hover, and fullscreen capabilities.
-* **Recruiter Profile Inspector**: Select any candidate from the dropdown to load an explainable scorecard detail card displaying score contributions (radar/bar format) and signal importance.
-* **AI Insights Chatbot**: Query the active dataset interactively (e.g. *"Who is the top candidate and why?"*, *"Show common technical skills"*, *"List India-based candidates"*).
+* **Interactive Charting (Plotly)**: Visualizes aggregate score distributions, experience vs score scatter metrics, and top skill counts positioned below the main tables.
+* **Recruiter Profile Inspector**: Filterable and searchable dropdown to inspect specific scorecards, feature importance breakdowns, notice periods, and relocation signals.
+* **Complete List Spreadsheet Grid**: A full spreadsheet view that renders the *entire* candidate list (not truncated to top 100) with a one-click download button to export the complete ranked list.
 
 First, install the dependencies:
 ```bash

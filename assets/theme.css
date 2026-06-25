@@ -39,14 +39,23 @@ html, body {
 }
 
 @media (min-width: 768px) {
-    html, body {
+    html, body, .gradio-container {
         height: 100vh !important;
+        max-height: 100vh !important;
         overflow: hidden !important;
     }
     #sidebar, #main-workspace {
         height: 100vh !important;
+        max-height: 100vh !important;
         overflow-y: auto !important;
     }
+}
+
+/* Fix Plotly wrapper height to prevent dynamic resizing loops */
+.gradio-plot, .plot-container, .plotly {
+    max-height: 320px !important;
+    height: 320px !important;
+    overflow: hidden !important;
 }
 
 @media (max-width: 767px) {

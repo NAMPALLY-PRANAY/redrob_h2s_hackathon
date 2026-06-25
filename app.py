@@ -314,7 +314,8 @@ def process_candidate_dataset(file_obj, exp_w, title_w, loc_w, bio_w, skill_w, t
             None,                      # interactive grid dataframe
             gr.update(choices=[]),     # inspector candidate choices
             "",                        # inspector card html
-            ""                         # stats cards
+            "",                        # stats cards
+            None                       # download complete list path
         )
         
     # Check macOS System Shadow files
@@ -327,7 +328,7 @@ def process_candidate_dataset(file_obj, exp_w, title_w, loc_w, bio_w, skill_w, t
             f"You uploaded a macOS system metadata file ('{orig_name}'). "
             "Please upload the actual candidate data file instead."
         )
-
+ 
     # Initialise progressive checkpoints list
     steps = [
         ("Preparing system context & cleaning workspace", 1),
@@ -345,7 +346,7 @@ def process_candidate_dataset(file_obj, exp_w, title_w, loc_w, bio_w, skill_w, t
         gr.update(visible=True, value=make_step_html(steps)), # loading list visible
         gr.update(visible=False),  # dashboard workspace hidden
         gr.update(value="<div style='color:var(--primary); font-weight:600;'>● Processing...</div>"), # status text
-        None, None, None, None, gr.update(choices=[]), "", ""
+        None, None, None, None, gr.update(choices=[]), "", "", None
     )
     
     time.sleep(0.5)
@@ -356,7 +357,7 @@ def process_candidate_dataset(file_obj, exp_w, title_w, loc_w, bio_w, skill_w, t
     yield (
         gr.update(visible=False), gr.update(value=make_step_html(steps)), gr.update(visible=False),
         gr.update(value="<div style='color:var(--primary); font-weight:600;'>● Processing...</div>"),
-        None, None, None, None, gr.update(choices=[]), "", ""
+        None, None, None, None, gr.update(choices=[]), "", "", None
     )
     
     try:
@@ -388,7 +389,7 @@ def process_candidate_dataset(file_obj, exp_w, title_w, loc_w, bio_w, skill_w, t
     yield (
         gr.update(visible=False), gr.update(value=make_step_html(steps)), gr.update(visible=False),
         gr.update(value="<div style='color:var(--primary); font-weight:600;'>● Processing...</div>"),
-        None, None, None, None, gr.update(choices=[]), "", ""
+        None, None, None, None, gr.update(choices=[]), "", "", None
     )
     
     # Quick structure check
@@ -404,7 +405,7 @@ def process_candidate_dataset(file_obj, exp_w, title_w, loc_w, bio_w, skill_w, t
     yield (
         gr.update(visible=False), gr.update(value=make_step_html(steps)), gr.update(visible=False),
         gr.update(value="<div style='color:var(--primary); font-weight:600;'>● Processing...</div>"),
-        None, None, None, None, gr.update(choices=[]), "", ""
+        None, None, None, None, gr.update(choices=[]), "", "", None
     )
     
     # Store weights
@@ -439,7 +440,7 @@ def process_candidate_dataset(file_obj, exp_w, title_w, loc_w, bio_w, skill_w, t
     yield (
         gr.update(visible=False), gr.update(value=make_step_html(steps)), gr.update(visible=False),
         gr.update(value="<div style='color:var(--primary); font-weight:600;'>● Processing...</div>"),
-        None, None, None, None, gr.update(choices=[]), "", ""
+        None, None, None, None, gr.update(choices=[]), "", "", None
     )
     
     scored_list.sort(key=lambda x: (-x["score"], x["candidate_id"]))
@@ -453,10 +454,10 @@ def process_candidate_dataset(file_obj, exp_w, title_w, loc_w, bio_w, skill_w, t
     yield (
         gr.update(visible=False), gr.update(value=make_step_html(steps)), gr.update(visible=False),
         gr.update(value="<div style='color:var(--primary); font-weight:600;'>● Processing...</div>"),
-        None, None, None, None, gr.update(choices=[]), "", ""
+        None, None, None, None, gr.update(choices=[]), "", "", None
     )
     
-    top_n = min(len(scored_list), 100)
+    top_n = len(scored_list)
     output_rows = []
     for rank, item in enumerate(scored_list[:top_n], start=1):
         reason = reason_for_candidate(item["c_dict"], item["matched"])
@@ -481,13 +482,13 @@ def process_candidate_dataset(file_obj, exp_w, title_w, loc_w, bio_w, skill_w, t
     yield (
         gr.update(visible=False), gr.update(value=make_step_html(steps)), gr.update(visible=False),
         gr.update(value="<div style='color:var(--primary); font-weight:600;'>● Processing...</div>"),
-        None, None, None, None, gr.update(choices=[]), "", ""
+        None, None, None, None, gr.update(choices=[]), "", "", None
     )
     
-    # Plots
+    # Plots (Optimize: score distribution on entire, scatter on top 500, skills on top 1000)
     plot_dist = make_score_distribution_plot(df)
-    plot_scatter = make_experience_vs_score_plot(scored_list[:top_n])
-    plot_skills = make_top_skills_plot(scored_list[:top_n])
+    plot_scatter = make_experience_vs_score_plot(scored_list[:min(len(scored_list), 500)])
+    plot_skills = make_top_skills_plot(scored_list[:min(len(scored_list), 1000)])
     
     # Calculate stats cards variables
     candidates_count = len(scored_list)
@@ -522,7 +523,7 @@ def process_candidate_dataset(file_obj, exp_w, title_w, loc_w, bio_w, skill_w, t
     """
     
     # Inspector candidate choices
-    inspector_choices = [item["candidate_id"] for item in scored_list[:top_n]]
+    inspector_choices = [item["candidate_id"] for item in scored_list]
     default_card = render_inspector_card(inspector_choices[0], weights) if inspector_choices else ""
     
     steps[6] = (steps[6][0], 2)
@@ -540,121 +541,15 @@ def process_candidate_dataset(file_obj, exp_w, title_w, loc_w, bio_w, skill_w, t
         df,
         gr.update(choices=inspector_choices, value=inspector_choices[0] if inspector_choices else None),
         default_card,
-        gr.update(value=stats_html)
+        gr.update(value=stats_html),
+        csv_path
     )
 
-# ChatGPT-style Recruiter AI Insights Conversation logic
-def process_ai_insight(query, history):
-    global ranking_results
-    if not ranking_results:
-        response = "Please upload a candidate profile dataset first so I can analyze it and generate custom insights."
-        history.append((query, response))
-        return "", history
-        
-    q = query.lower().strip()
-    
-    if "top" in q or "best" in q or "who is the" in q:
-        top_cand = ranking_results[0]
-        cid = top_cand["candidate_id"]
-        score = top_cand["score"]
-        p = top_cand["c_dict"]["profile"]
-        skills = ", ".join([s.get("name", "") for s in top_cand["c_dict"].get("skills", [])[:5]])
-        reason = reason_for_candidate(top_cand["c_dict"], top_cand["matched"])
-        
-        response = f"""
-### 🥇 Top Ranked Candidate Analysis
-
-The highest scoring candidate is **{cid}** with an aggregate compatibility score of **{score:.4f}**.
-
-**Candidate summary:**
-* **Current Designation**: {p.get('current_title', 'Engineer')} at {p.get('current_company', 'N/A')}
-* **Total Years of Experience**: {p.get('years_of_experience', 0)} Years
-* **Primary Skills**: {skills}
-* **Suitability**: {reason}
-"""
-    elif "skills" in q or "technologies" in q or "stack" in q:
-        from collections import Counter
-        all_skills = Counter()
-        for item in ranking_results[:50]:
-            for s in item["c_dict"].get("skills", []):
-                all_skills[s.get("name", "")] += 1
-        top_10 = all_skills.most_common(6)
-        skills_table = "\n".join([f"| {s[0]} | {s[1]} |" for s in top_10])
-        response = f"""
-### 🛠️ Common Technical Skills & Technologies
-Here are the most frequent technical skills found among the top 50 ranked candidates in this dataset:
-
-| Skill / Technology | Frequency |
-| :--- | :--- |
-{skills_table}
-
-The dataset demonstrates high technical alignment with the target Python and vector search database stack.
-"""
-    elif "india" in q or "onsite" in q or "pune" in q or "noida" in q:
-        india_candidates = []
-        for item in ranking_results:
-            c = item["c_dict"]
-            p = c["profile"]
-            if p.get("country", "").lower() == "india":
-                india_candidates.append(item)
-                
-        count = len(india_candidates)
-        top_india = india_candidates[:3]
-        rows = ""
-        for idx, item in enumerate(top_india, start=1):
-            p = item["c_dict"]["profile"]
-            rows += f"\n{idx}. **{item['candidate_id']}** (Score: {item['score']:.4f}) - {p.get('current_title', 'Engineer')} located in {p.get('location', 'N/A')}"
-            
-        response = f"""
-### 🇮🇳 Geographic & Relocation Compliance
-
-There are **{count}** total candidates located in **India** within the uploaded dataset.
-
-**Top 3 India-based matches:**
-{rows}
-
-These candidates are positioned strongly to meet the Pune/Noida onsite requirements.
-"""
-    elif "experience" in q or "senior" in q:
-        counts = {"Junior (<3 yrs)": 0, "Mid (3-6 yrs)": 0, "Senior (6-10 yrs)": 0, "Principal (>10 yrs)": 0}
-        for item in ranking_results:
-            exp = item["c_dict"]["profile"].get("years_of_experience", 0) or 0
-            if exp < 3:
-                counts["Junior (<3 yrs)"] += 1
-            elif exp < 6:
-                counts["Mid (3-6 yrs)"] += 1
-            elif exp <= 10:
-                counts["Senior (6-10 yrs)"] += 1
-            else:
-                counts["Principal (>10 yrs)"] += 1
-        
-        response = f"""
-### 🎓 Years of Experience Distribution
-
-Here is the breakdown of candidate experience levels across the entire dataset:
-* **Junior (<3 years)**: {counts["Junior (<3 yrs)"]} candidates
-* **Mid (3-6 years)**: {counts["Mid (3-6 yrs)"]} candidates
-* **Senior (6-10 years)**: {counts["Senior (6-10 yrs)"]} candidates (Peak evaluation range)
-* **Principal (>10 years)**: {counts["Principal (>10 yrs)"]} candidates
-"""
-    else:
-        response = f"""
-### 🤖 Redrob Candidate Insights Engine
-
-I am scanning the active dataset containing **{len(ranking_results)}** processed records. Try asking specific analytical queries:
-* *"Who is the top candidate and why?"*
-* *"What are the most frequent skills?"*
-* *"How many candidates are located in India?"*
-* *"Show experience distribution statistics"*
-"""
-    history.append((query, response))
-    return "", history
 
 # Custom CSS for complete styling overhaul
 with open("assets/theme.css", "r", encoding="utf-8") as css_file:
     custom_css = css_file.read()
 
-# Build Layout structure
 with gr.Blocks(title="AI Candidate Ranking Platform") as demo:
     
     # Sliders and widgets state
@@ -665,6 +560,20 @@ with gr.Blocks(title="AI Candidate Ranking Platform") as demo:
             logo_path = Path("logo.png")
             if logo_path.exists():
                 gr.Image(value=str(logo_path), show_label=False, container=False, elem_classes="logo-container")
+            
+            with gr.Accordion("📋 Expected Candidate Schema", open=False):
+                gr.Markdown(
+                    """
+                    Upload candidate JSON/JSONL dataset conforming to:
+                    * `candidate_id` (CAND_XXXXXXX)
+                    * `profile` (headline, summary, years_of_experience)
+                    * `career_history` (company, title, duration)
+                    * `skills` (name, proficiency)
+                    * `redrob_signals` (open_to_work_flag, completeness)
+                    """
+                )
+                
+            gr.HTML("<hr style='border-top:1px solid var(--border-color); margin:1.25rem 0;'>")
             
             gr.Markdown("## 🏆 Candidate Engine")
             gr.Markdown("Adjust weights to customize scores:")
@@ -678,20 +587,6 @@ with gr.Blocks(title="AI Candidate Ranking Platform") as demo:
                 text_slider = gr.Slider(minimum=0.0, maximum=5.0, step=0.1, value=1.0, label="Text Relevance")
                 career_slider = gr.Slider(minimum=0.0, maximum=5.0, step=0.1, value=1.0, label="Career Strength")
                 cons_slider = gr.Slider(minimum=0.0, maximum=5.0, step=0.1, value=1.0, label="Consistency Filter")
-            
-            gr.HTML("<hr style='border-top:1px solid var(--border-color); margin:1.25rem 0;'>")
-            
-            with gr.Accordion("📋 Expected Candidate Schema", open=False):
-                gr.Markdown(
-                    """
-                    Upload candidate JSON/JSONL dataset conforming to:
-                    * `candidate_id` (CAND_XXXXXXX)
-                    * `profile` (headline, summary, years_of_experience)
-                    * `career_history` (company, title, duration)
-                    * `skills` (name, proficiency)
-                    * `redrob_signals` (open_to_work_flag, completeness)
-                    """
-                )
                 
             gr.HTML("<div style='font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:2rem;'>SaaS Platform v1.1.2</div>")
             
@@ -740,26 +635,20 @@ with gr.Blocks(title="AI Candidate Ranking Platform") as demo:
                 # Stats dashboard cards grid
                 stats_cards = gr.HTML(value="")
                 
-                # Visualizations segment
-                with gr.Row():
-                    chart_score_dist = gr.Plot()
-                    chart_scatter_fit = gr.Plot()
-                    chart_skills_counter = gr.Plot()
-                
                 # Detailed analysis tabs
                 with gr.Tabs():
                     
                     with gr.TabItem("📊 Interactive Spreadsheet Grid"):
-                        with gr.Row():
-                            with gr.Column(scale=4):
-                                table_grid = gr.Dataframe(
-                                    headers=["candidate_id", "rank", "score", "reasoning"],
-                                    datatype=["str", "number", "number", "str"],
-                                    wrap=True,
-                                    interactive=False
-                                )
-                            with gr.Column(scale=1):
-                                download_btn = gr.File(label="Download Ranked Report CSV", interactive=False)
+                        with gr.Row(elem_classes="table-header-row"):
+                            gr.Markdown("### 📋 Complete Ranked Candidates List")
+                            download_btn = gr.DownloadButton("📥 Download Complete List (CSV)", size="sm", variant="primary")
+                        table_grid = gr.Dataframe(
+                            headers=["candidate_id", "rank", "score", "reasoning"],
+                            datatype=["str", "number", "number", "str"],
+                            wrap=True,
+                            interactive=False,
+                            max_height=550
+                        )
                                 
                     with gr.TabItem("🔎 Recruiter Profile Scorecard"):
                         with gr.Row():
@@ -767,7 +656,8 @@ with gr.Blocks(title="AI Candidate Ranking Platform") as demo:
                                 inspector_dropdown = gr.Dropdown(
                                     choices=[],
                                     label="Select Candidate to Inspect",
-                                    interactive=True
+                                    interactive=True,
+                                    filterable=True
                                 )
                             with gr.Column(scale=3):
                                 inspector_details = gr.HTML(value="")
@@ -788,6 +678,12 @@ with gr.Blocks(title="AI Candidate Ranking Platform") as demo:
                             btn_q2 = gr.Button("What are the most frequent skills?", size="sm")
                             btn_q3 = gr.Button("How many candidates are located in India?", size="sm")
                             btn_q4 = gr.Button("Show experience distribution", size="sm")
+                
+                # Visualizations segment (moved below detailed analysis tabs!)
+                with gr.Row():
+                    chart_score_dist = gr.Plot()
+                    chart_scatter_fit = gr.Plot()
+                    chart_skills_counter = gr.Plot()
             
             # --- WIDGET EVENT HANDLERS ---
             
@@ -795,7 +691,7 @@ with gr.Blocks(title="AI Candidate Ranking Platform") as demo:
             file_input.change(
                 fn=process_candidate_dataset,
                 inputs=[file_input, exp_slider, title_slider, loc_slider, bio_slider, skill_slider, text_slider, career_slider, cons_slider],
-                outputs=[landing_area, loading_area, dashboard_workspace, status_badge, chart_score_dist, chart_scatter_fit, chart_skills_counter, table_grid, inspector_dropdown, inspector_details, stats_cards],
+                outputs=[landing_area, loading_area, dashboard_workspace, status_badge, chart_score_dist, chart_scatter_fit, chart_skills_counter, table_grid, inspector_dropdown, inspector_details, stats_cards, download_btn],
                 show_progress="hidden"
             )
             
@@ -842,7 +738,7 @@ with gr.Blocks(title="AI Candidate Ranking Platform") as demo:
                         
                 scored_list.sort(key=lambda x: (-x["score"], x["candidate_id"]))
                 
-                top_n = min(len(scored_list), 100)
+                top_n = len(scored_list)
                 output_rows = []
                 for rank, item in enumerate(scored_list[:top_n], start=1):
                     reason = reason_for_candidate(item["c_dict"], item["matched"])
@@ -859,8 +755,8 @@ with gr.Blocks(title="AI Candidate Ranking Platform") as demo:
                 df.to_csv(csv_path, index=False)
                 
                 plot_dist = make_score_distribution_plot(df)
-                plot_scatter = make_experience_vs_score_plot(scored_list[:top_n])
-                plot_skills = make_top_skills_plot(scored_list[:top_n])
+                plot_scatter = make_experience_vs_score_plot(scored_list[:min(len(scored_list), 500)])
+                plot_skills = make_top_skills_plot(scored_list[:min(len(scored_list), 1000)])
                 
                 # Stats cards variables
                 candidates_count = len(scored_list)
@@ -893,7 +789,7 @@ with gr.Blocks(title="AI Candidate Ranking Platform") as demo:
                 </div>
                 """
                 
-                inspector_choices = [item["candidate_id"] for item in scored_list[:top_n]]
+                inspector_choices = [item["candidate_id"] for item in scored_list]
                 default_card = render_inspector_card(inspector_choices[0], weights) if inspector_choices else ""
                 
                 return plot_dist, plot_scatter, plot_skills, df, gr.update(choices=inspector_choices, value=inspector_choices[0] if inspector_choices else None), default_card, stats_html, csv_path
@@ -907,15 +803,6 @@ with gr.Blocks(title="AI Candidate Ranking Platform") as demo:
                     outputs=[chart_score_dist, chart_scatter_fit, chart_skills_counter, table_grid, inspector_dropdown, inspector_details, stats_cards, download_btn],
                     show_progress="hidden"
                 )
-                
-            # Chatbot queries
-            chat_send.click(fn=process_ai_insight, inputs=[chat_input, chat_history], outputs=[chat_input, chat_history])
-            chat_input.submit(fn=process_ai_insight, inputs=[chat_input, chat_history], outputs=[chat_input, chat_history])
-            
-            btn_q1.click(fn=lambda h: process_ai_insight("Who is the top candidate?", h), inputs=chat_history, outputs=[chat_input, chat_history])
-            btn_q2.click(fn=lambda h: process_ai_insight("What are the most frequent skills?", h), inputs=chat_history, outputs=[chat_input, chat_history])
-            btn_q3.click(fn=lambda h: process_ai_insight("How many candidates are located in India?", h), inputs=chat_history, outputs=[chat_input, chat_history])
-            btn_q4.click(fn=lambda h: process_ai_insight("Show experience distribution", h), inputs=chat_history, outputs=[chat_input, chat_history])
 
 if __name__ == "__main__":
     demo.launch(server_name="0.0.0.0", server_port=7860, css=custom_css, theme=gr.themes.Soft())
