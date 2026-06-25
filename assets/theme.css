@@ -1,0 +1,188 @@
+/* Custom Style Overrides for Premium AI Web Application Redesign */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --primary-glow: rgba(99, 102, 241, 0.15);
+    --bg-dark: #080C14;
+    --surface-card: #0F172A;
+    --surface-sidebar: #0B0F19;
+    --border-color: #1E293B;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --error: #EF4444;
+}
+
+/* Force container full width */
+.gradio-container {
+    max-width: 100% !important;
+    background-color: var(--bg-dark) !important;
+    font-family: 'Inter', sans-serif !important;
+    color: var(--text-primary) !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif !important;
+    color: var(--text-primary) !important;
+}
+
+/* Sidebar Styling */
+#sidebar {
+    background-color: var(--surface-sidebar) !important;
+    border-right: 1px solid var(--border-color) !important;
+    padding: 1.5rem !important;
+    height: 100vh !important;
+    overflow-y: auto !important;
+}
+
+/* Main workspace area styling */
+#main-workspace {
+    padding: 2rem !important;
+    background-color: var(--bg-dark) !important;
+    height: 100vh !important;
+    overflow-y: auto !important;
+}
+
+/* Premium Cards */
+.metric-card {
+    background: var(--surface-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    padding: 1.25rem !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px) !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.1), 0 4px 6px -4px rgba(99, 102, 241, 0.1) !important;
+}
+
+/* Custom File Upload Styling (Cloud Storage appearance) */
+.upload-zone {
+    border: 2px dashed var(--border-color) !important;
+    border-radius: 16px !important;
+    padding: 3rem 2rem !important;
+    text-align: center !important;
+    background: rgba(15, 23, 42, 0.4) !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+}
+
+.upload-zone:hover {
+    border-color: var(--primary) !important;
+    background: rgba(99, 102, 241, 0.02) !important;
+}
+
+/* Progress and Checklists */
+.progress-container {
+    background-color: var(--surface-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    padding: 1.5rem !important;
+    margin: 1.5rem 0 !important;
+}
+
+.progress-bar-bg {
+    background-color: #1e293b !important;
+    border-radius: 9999px !important;
+    overflow: hidden !important;
+    height: 8px !important;
+    width: 100% !important;
+}
+
+.progress-bar-fill {
+    background-color: var(--primary) !important;
+    height: 100% !important;
+    transition: width 0.4s ease !important;
+    box-shadow: 0 0 12px var(--primary) !important;
+}
+
+/* Checklist step items */
+.step-item {
+    display: flex !important;
+    align-items: center !important;
+    margin: 0.75rem 0 !important;
+    font-size: 0.95rem !important;
+}
+
+.step-indicator {
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 50% !important;
+    margin-right: 12px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.75rem !important;
+}
+
+.step-pending {
+    border: 2px solid var(--text-muted) !important;
+    color: var(--text-muted) !important;
+}
+
+.step-active {
+    border: 2px solid var(--primary) !important;
+    color: var(--primary) !important;
+    animation: pulse 1.5s infinite !important;
+}
+
+.step-complete {
+    background-color: var(--success) !important;
+    border: 2px solid var(--success) !important;
+    color: white !important;
+}
+
+/* Interactive inspector cards */
+.inspector-card {
+    background: var(--surface-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 16px !important;
+    padding: 1.5rem !important;
+    margin-top: 1rem !important;
+}
+
+/* Shimmer Loading Animations */
+.shimmer {
+    background: linear-gradient(90deg, #0F172A 25%, #1E293B 50%, #0F172A 75%) !important;
+    background-size: 200% 100% !important;
+    animation: shimmer 1.5s infinite linear !important;
+    border-radius: 8px !important;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+/* Custom Gradio component hide */
+footer {
+    display: none !important;
+}
+.feedback {
+    display: none !important;
+}
+
+/* Modern tabs styling */
+.tabs {
+    border-bottom: 1px solid var(--border-color) !important;
+}
+.tabitem {
+    background-color: var(--bg-dark) !important;
+    border: none !important;
+}

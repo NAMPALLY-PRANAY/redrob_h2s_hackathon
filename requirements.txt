@@ -1,3 +1,5 @@
 gradio>=4.0
 pandas
 numpy
+plotly
+orjson
