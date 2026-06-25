@@ -12,6 +12,17 @@ def run_ranker(file_obj):
     
     # Read file contents and determine format
     try:
+        # Check if it is a macOS metadata file
+        orig_name = getattr(file_obj, "orig_name", "")
+        if not orig_name and hasattr(file_obj, "name"):
+            orig_name = os.path.basename(file_obj.name)
+            
+        if orig_name.startswith("._"):
+            raise gr.Error(
+                f"You uploaded a macOS system metadata file ('{orig_name}'). "
+                "Please upload the actual candidate data file instead."
+            )
+            
         with open(file_obj.name, "r", encoding="utf-8") as f:
             content = f.read().strip()
             
@@ -34,6 +45,11 @@ def run_ranker(file_obj):
                     raise gr.Error(f"Line {i} is not valid JSON: {je}")
     except gr.Error as ge:
         raise ge
+    except UnicodeDecodeError:
+        raise gr.Error(
+            "Failed to read the file because it contains binary data. "
+            "Please ensure it is a plain text file in JSON or JSONL format (and not a compressed .zip, .gz, or system metadata file)."
+        )
     except Exception as e:
         raise gr.Error(f"Failed to parse file: {e}. Please ensure it is valid JSON or JSONL format.")
     
