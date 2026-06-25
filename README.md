@@ -176,16 +176,23 @@ Verify that the output format strictly complies with the hackathon validation ru
 python validate_submission.py submission.csv
 ```
 
-### 3. Interactive Gradio Sandbox
-First, install the environment dependencies:
+### 3. Interactive Premium SaaS Sandbox
+The sandbox has been completely redesigned into a premium, commercial-grade AI Web Application resembling ChatGPT, Claude, and Perplexity. It includes:
+* **Interactive Control Sidebar**: Tune ranking weights dynamically (Experience, Role Title, Location Fit, Behavioral Signal, Exact Skill Matching, Text Relevance, Career Strength, Consistency).
+* **Cloud-Storage Upload Experience**: Modern drag-and-drop landing state with a progressive checklist loading indicator.
+* **Interactive Charting (Plotly)**: Visualizes score distributions, years of experience alignment, and technical skill frequencies with zoom, hover, and fullscreen capabilities.
+* **Recruiter Profile Inspector**: Select any candidate from the dropdown to load an explainable scorecard detail card displaying score contributions (radar/bar format) and signal importance.
+* **AI Insights Chatbot**: Query the active dataset interactively (e.g. *"Who is the top candidate and why?"*, *"Show common technical skills"*, *"List India-based candidates"*).
+
+First, install the dependencies:
 ```bash
 pip install -r requirements.txt
 ```
-Next, launch the interactive UI:
+Next, launch the app:
 ```bash
 python app.py
 ```
-Open your browser and navigate to `http://localhost:7860` to upload `sample_candidates.json` and explore the candidates, scores, and recruiter-friendly reasoning.
+Open your browser to `http://localhost:7860`, upload `sample_candidates.json`, and interact with the candidate evaluation pipeline.
 
 ---
 
