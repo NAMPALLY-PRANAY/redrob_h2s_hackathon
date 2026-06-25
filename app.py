@@ -132,7 +132,7 @@ with gr.Blocks(title="X7F9A2 — Intelligent Candidate Discovery Engine") as dem
             )
             
             gr.Markdown("#### 💡 Example Datasets")
-            example_file = Path("sample_candidates.json")
+            example_file = Path("data/sample_candidates.json")
             if example_file.exists():
                 gr.Markdown(
                     f"You can download and use the official `{example_file.name}` dataset included in the workspace to test the engine."
