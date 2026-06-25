@@ -28,11 +28,11 @@ reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submi
 # Compute environment
 # ============================================================================
 compute:
-  platform: "Windows Laptop"
-  cpu_cores: 8
+  platform: "Hugging Face Spaces (CPU basic: 2 vCPU, 16 GB RAM)"
+  cpu_cores: 2
   ram_gb: 16
-  python_version: "3.13"
-  os: "Windows 11"
+  python_version: "3.10"
+  os: "Debian GNU/Linux"
   uses_gpu_for_inference: false
   has_network_during_ranking: false
   pre_computation_required: false

@@ -10,15 +10,25 @@ pinned: false
 license: mit
 ---
 
-# 🚀 X7F9A2 — Intelligent Candidate Discovery & Ranking Engine
+# 🏆 AI Candidate Ranking Platform
 
-### Redrob Data & AI Challenge 2026
+### Intelligent Candidate Evaluation & Ranking
 
-An AI-powered, deterministic candidate discovery and ranking system designed to intelligently match talent against a **Senior AI Engineer** job description. It evaluates professional summaries, career history, technical skills, geographical locations, and behavioral signals to generate recruiter-friendly explanations and stable rankings.
+Welcome to the AI Candidate Ranking Platform, an interactive application for evaluating and ranking candidate profiles using a deterministic scoring engine.
 
 <p align="center">
   <img src="logo.png" alt="Team X7F9A2 Logo" width="300" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
 </p>
+
+Upload a candidate dataset in **JSON** or **JSONL** format to:
+
+* Analyze candidate profiles against predefined evaluation criteria
+* Generate standardized suitability scores
+* Provide transparent reasoning for each evaluation
+* Rank candidates based on their overall performance
+* Export the complete ranked results as a CSV report
+
+The platform is designed to deliver **consistent, objective, and explainable** candidate assessments, enabling efficient review and comparison of large candidate datasets.
 
 ---
 
